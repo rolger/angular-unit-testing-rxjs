@@ -98,31 +98,4 @@ describe('Observable', () => {
         expect(result.count).toEqual(4);
     });
 
-    it('the main event', () => {
-        var result = [];
-        var subject = new Subject();
-
-        var subscription = subject.subscribe(result.push.bind(result));
-
-        subject.next('R');
-        subject.next('x');
-        subject.next('J');
-        subject.next('S');
-
-        subscription.unsubscribe();
-
-        subject.next('!');
-
-        expect(result).toEqual([]);
-    });
-
-    it('the runs ...', () => {
-
-        const numbers = interval(1000);
-
-        //const takeFourNumbers = numbers.pipe(take(4));
-
-        numbers.subscribe(x => console.log('Next: ', x));
-    });
-
 });
