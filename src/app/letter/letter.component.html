@@ -1,0 +1,43 @@
+<div class="card">
+    <div class="card-header">
+        Send your personal letter
+    </div>
+
+    <div class="card-body">
+        <div class="container">
+            <div class="row align-self-stretch">
+                <div class="col-12"><textarea [(ngModel)]="content" rows="6"></textarea></div>
+            </div>
+
+            <div class="row align-self-stretch">
+                <div class="col-4">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="isExpressMode" [checked]="isExpressMode" id="express">
+                        Express
+                    </label>
+                </div>
+            </div>
+
+            <div class="row justify-content-between">
+                <div class="col-4">Select destination</div>
+                <div class="col-6">
+                    <select class="form-control" [(ngModel)]="selectedDestination">
+                        <option *ngFor="let country of countries" [value]="country">
+                            {{country.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <br/>
+            <button color="primary" (click)="send()" class="btn btn-primary" type="button">Send Letter</button>
+        </div>
+
+        <br/>
+        <div class="container">
+            <div *ngIf="message" [ngClass]="message.type === 'success' ? 'alert alert-info' : 'alert alert-danger'">
+                <span>{{message.text}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+

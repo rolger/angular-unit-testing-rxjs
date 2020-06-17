@@ -1,0 +1,50 @@
+<div class="card">
+    <div class="card-header">
+        Country List
+    </div>
+
+    <div class="card-body">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-5">
+                    <input #search
+                           class="form-control"
+                           placeholder="Enter search string"
+                           type="search">
+                </div>
+                <div class="col-2">
+                    <button (click)="doSearch(search.value)" class="btn btn-primary" type="button">Search</button>
+                </div>
+            </div>
+
+            <br/>
+
+            <div class="text-center">
+                <p *ngIf="loading" class="lead">Loading...</p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table mb-0" *ngIf="countries">
+                    <thead>
+                    <tr>
+                        <th>Flag</th>
+                        <th>Country</th>
+                        <th>Code</th>
+                        <th>Region</th>
+                    </tr>
+                    </thead>
+                    <tbody *ngFor="let country of countries">
+                    <tr>
+                        <td><img border="1" height="13" src="{{country.flagUrl}}" width="26"></td>
+                        <td>{{ country.name }}</td>
+                        <td>{{ country.alpha2Code }}</td>
+                        <td>{{ country.regionBloc }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</div>
