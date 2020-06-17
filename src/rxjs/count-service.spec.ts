@@ -11,40 +11,7 @@ describe('CountChars', () => {
     describe('count()', () => {
 
         it('should return empty observable', () => {
-            let actual = service.countWithRxJs(cold('|'));
-            let expected = cold('|');
-
-            expect(actual).toBeObservable(expected);
-        });
-
-        it('should count 1 chararcter', () => {
-            let actual = service.countWithRxJs(cold('-a-|'));
-            let expected = cold('(--(c|))', {c: 1});
-
-            expect(actual).toBeObservable(expected);
-        });
-
-        it('should count 2 chararcter', () => {
-            let actual = service.countWithRxJs(cold('-aa|'));
-            let expected = cold('(--(c|))', {c: 2});
-
-            expect(actual).toBeObservable(expected);
-        });
-
-        it('should count 2 different chararcter', () => {
-            let actual = service.countWithRxJs(cold('-ab|'));
-            let expected = cold('---(cd|))', {c: 1, d: 1});
-
-            expect(actual).toBeObservable(expected);
-        });
-
-        it('should count multiple different chararcter and sort', () => {
-            let actual = service.countWithRxJs(cold('-aaba|'));
-            let expected = cold('-----(cd|))', {c: 1, d: 3});
-
-            expect(actual).toBeObservable(expected);
-
-            fromEvent(document, 'click');
+            // TODO: start here
         });
 
     });
