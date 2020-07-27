@@ -25,11 +25,12 @@ describe('Country Component Test', () => {
     });
 
     describe('emitting countries observerable', () => {
-        it('after 500ms without key', () => {
+        it('emits after 500ms without key and calls service', () => {
             const scheduler = new TestScheduler((actual, expected) => {
                 // asserting the two objects are equal
                 expect(actual).toEqual(expected);
             });
+
 
             scheduler.run(helpers => {
                 const {expectObservable} = helpers;
@@ -37,16 +38,16 @@ describe('Country Component Test', () => {
                     scheduler.createColdObservable('c', {c: COUNTRIES})
                 );
 
-                //component.keyActions$ = scheduler.createColdObservable('');
                 component.ngOnInit();
 
                 expectObservable(component.countries$).toBe('500ms c', {
                     c: COUNTRIES
                 });
             });
+            expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('');
         });
 
-        it('a key and after 500ms', () => {
+        it('receives key and emits after 500ms', () => {
             const scheduler = new TestScheduler((actual, expected) => {
                 // asserting the two objects are equal
                 expect(actual).toEqual(expected);
@@ -58,12 +59,14 @@ describe('Country Component Test', () => {
                     scheduler.createColdObservable('c', {c: COUNTRIES})
                 );
                 component.keyActions$ = scheduler.createColdObservable('a');
+
                 component.ngOnInit();
 
                 expectObservable(component.countries$).toBe('500ms c', {
                     c: COUNTRIES
                 });
             });
+            expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('a');
         });
 
         it(' after 500ms and keys', () => {
@@ -78,15 +81,16 @@ describe('Country Component Test', () => {
                     scheduler.createColdObservable('c', {c: COUNTRIES})
                 );
 
-                component.keyActions$ = scheduler.createColdObservable('aus');
+                component.keyActions$ = scheduler.createColdObservable('200ms a 600ms t');
+                scheduler.flush();
 
                 component.ngOnInit();
-                expectObservable(component.countries$).toBe('502ms c', {
+
+                expectObservable(component.countries$).toBe('700ms c 1301ms c', {
                     c: COUNTRIES
                 });
-
-                expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalled();
             });
+            expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('a');
         });
 
     });
