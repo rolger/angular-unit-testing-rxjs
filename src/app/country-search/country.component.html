@@ -8,9 +8,11 @@
             <div class="row justify-content-between">
                 <div class="col-5">
                     <input #search
+                           (keyup)="onKey(search.value)"
                            class="form-control"
                            placeholder="Enter search string"
-                           type="search">
+                           type="search"
+                    >
                 </div>
                 <div class="col-2">
                     <button (click)="doSearch(search.value)" class="btn btn-primary" type="button">Search</button>
