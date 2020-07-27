@@ -6,6 +6,9 @@ function subscribeToObserver(observable) {
     let result = '';
     observable.subscribe({
         next(data) {
+            if(data === 4711)
+                throw new Error('4711');
+
             result += 'value: ' + data + ';';
         },
         error(err) {
@@ -18,7 +21,7 @@ function subscribeToObserver(observable) {
     return result;
 }
 
-describe('Observable', () => {
+describe('RxJs and observable exercises', () => {
 
     it('should create an empty Observable', () => {
         const observable = new Observable(observer => {
@@ -50,13 +53,32 @@ describe('Observable', () => {
         expect(result).toEqual('value: 201;error code: 4711');
     });
 
-    it('should be created with rxjs factory methods', () => {
-        // TODO: change to fix the test
-        const observable = EMPTY;
+    it('should create an Observable with throwing error code', () => {
+        const observable = new Observable(observer => {
+            // TODO: add the missing calls
+        });
 
         let result = subscribeToObserver(observable);
 
-        expect(result).toEqual('value 1;value 2;done');
+        expect(result).toEqual('value: 201;error code: 4711');
+    });
+
+    it('should be created with rxjs factory methods', () => {
+        // TODO: change to fix the test
+        const observable = undefined;
+
+        let result = subscribeToObserver(observable);
+
+        expect(result).toEqual('value: 1;value: 2;done');
+    });
+
+    it('should emit an array with rxjs factory methods', () => {
+        // TODO: change to fix the test
+        const observable = undefined;
+
+        let result = subscribeToObserver(observable);
+
+        expect(result).toEqual('value: 1,2;done');
     });
 
     it('should receive the last event', () => {
