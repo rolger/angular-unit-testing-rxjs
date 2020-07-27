@@ -14,19 +14,13 @@
                            type="search"
                     >
                 </div>
-                <div class="col-2">
-                    <button (click)="doSearch(search.value)" class="btn btn-primary" type="button">Search</button>
-                </div>
+
             </div>
 
             <br/>
 
-            <div class="text-center">
-                <p *ngIf="loading" class="lead">Loading...</p>
-            </div>
-
             <div class="table-responsive">
-                <table class="table mb-0" *ngIf="countries">
+                <table class="table mb-0" *ngIf="countries$ | async  as countries">
                     <thead>
                     <tr>
                         <th>Flag</th>

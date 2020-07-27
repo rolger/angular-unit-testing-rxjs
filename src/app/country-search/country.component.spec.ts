@@ -1,15 +1,10 @@
 import {CountryComponent} from './country.component';
 import {Country} from '../model/country';
-import {CountrySearchService} from '../services/country-search-service';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {of} from 'rxjs/internal/observable/of';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {cold, getTestScheduler} from "jasmine-marbles";
+import {TestScheduler} from "rxjs/testing";
 
-describe('CountryComponent', () => {
+describe('Country Component Test', () => {
     let COUNTRIES;
     let stubCountrySearchService;
-    let fixture: ComponentFixture<CountryComponent>;
     let component: CountryComponent;
 
     beforeEach(() => {
@@ -25,36 +20,74 @@ describe('CountryComponent', () => {
             } as Country
         ];
         stubCountrySearchService = jasmine.createSpyObj(['searchCountriesByName']);
-        TestBed.configureTestingModule({
-            declarations: [
-                CountryComponent
-            ],
-            providers: [
-                {provide: CountrySearchService, useValue: stubCountrySearchService}
-            ],
-            schemas: [NO_ERRORS_SCHEMA]
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(CountryComponent);
-        component = fixture.componentInstance;
+        component = new CountryComponent(stubCountrySearchService);
 
     });
 
-    describe('doSearch()', () => {
+    describe('emitting countries observerable', () => {
+        it('after 500ms without key', () => {
+            const scheduler = new TestScheduler((actual, expected) => {
+                // asserting the two objects are equal
+                expect(actual).toEqual(expected);
+            });
 
-        it('should load countries via search', () => {
-            let httpResponse = cold('---c|', { c: COUNTRIES});
+            scheduler.run(helpers => {
+                const {expectObservable} = helpers;
+                stubCountrySearchService.searchCountriesByName.and.returnValue(
+                    scheduler.createColdObservable('c', {c: COUNTRIES})
+                );
 
-            stubCountrySearchService.searchCountriesByName.and.returnValue(httpResponse);
-            fixture.detectChanges();
+                //component.keyActions$ = scheduler.createColdObservable('');
+                component.ngOnInit();
 
-            component.doSearch('');
-
-            getTestScheduler().flush();
-
-            expect(component.countries).toEqual(COUNTRIES);
+                expectObservable(component.countries$).toBe('500ms c', {
+                    c: COUNTRIES
+                });
+            });
         });
 
+        it('a key and after 500ms', () => {
+            const scheduler = new TestScheduler((actual, expected) => {
+                // asserting the two objects are equal
+                expect(actual).toEqual(expected);
+            });
+
+            scheduler.run(helpers => {
+                const {expectObservable} = helpers;
+                stubCountrySearchService.searchCountriesByName.and.returnValue(
+                    scheduler.createColdObservable('c', {c: COUNTRIES})
+                );
+                component.keyActions$ = scheduler.createColdObservable('a');
+                component.ngOnInit();
+
+                expectObservable(component.countries$).toBe('500ms c', {
+                    c: COUNTRIES
+                });
+            });
+        });
+
+        it(' after 500ms and keys', () => {
+            const scheduler = new TestScheduler((actual, expected) => {
+                // asserting the two objects are equal
+                expect(actual).toEqual(expected);
+            });
+
+            scheduler.run(helpers => {
+                const {expectObservable} = helpers;
+                stubCountrySearchService.searchCountriesByName.and.returnValue(
+                    scheduler.createColdObservable('c', {c: COUNTRIES})
+                );
+
+                component.keyActions$ = scheduler.createColdObservable('aus');
+
+                component.ngOnInit();
+                expectObservable(component.countries$).toBe('502ms c', {
+                    c: COUNTRIES
+                });
+
+                expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalled();
+            });
+        });
 
     });
 
