@@ -5,6 +5,7 @@ import {PageNotFoundComponent} from "./page-not-found.component";
 import {CountryComponent} from "./country-search/country.component";
 import {LetterComponent} from "./letter/letter.component";
 import {GituserComponent} from "./gituser-suggestions/gituser.component";
+import {NumberTrackerComponent} from "./number-tracker/number-tracker.component";
 
 @NgModule({
     imports: [
@@ -12,6 +13,7 @@ import {GituserComponent} from "./gituser-suggestions/gituser.component";
             {path: 'start', component: StartComponent},
             {path: 'country-search', component: CountryComponent},
             {path: 'gituser-suggestions', component: GituserComponent},
+            {path: 'number-tracker', component: NumberTrackerComponent},
             {path: 'letter', component: LetterComponent},
             {path: '', redirectTo: 'start', pathMatch: 'full'},
             {path: '**', component: PageNotFoundComponent}

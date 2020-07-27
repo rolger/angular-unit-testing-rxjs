@@ -16,6 +16,7 @@ import {LetterComponent} from './letter/letter.component';
 import {FormsModule} from "@angular/forms";
 import {GituserComponent} from "./gituser-suggestions/gituser.component";
 import {GituserService} from "./services/gituser-service";
+import { NumberTrackerComponent } from './number-tracker/number-tracker.component';
 
 @NgModule({
     imports: [BrowserModule,
@@ -30,7 +31,8 @@ import {GituserService} from "./services/gituser-service";
         PageNotFoundComponent,
         CountryComponent,
         GituserComponent,
-        LetterComponent
+        LetterComponent,
+        NumberTrackerComponent
     ],
     bootstrap: [AppComponent],
     providers: [CountrySearchService, ShippingCostService, CountryInformationService, LetterSendService, GituserService]
