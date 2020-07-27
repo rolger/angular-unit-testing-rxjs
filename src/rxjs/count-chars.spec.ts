@@ -1,11 +1,11 @@
-import {CountService} from "./count-service";
+import {CountChars} from "./count-chars";
 import {cold} from "jasmine-marbles";
 import {fromEvent} from "rxjs";
 
 describe('CountChars', () => {
-    let service: CountService;
+    let service: CountChars;
     beforeEach(() => {
-        service = new CountService();
+        service = new CountChars();
     });
 
     describe('count()', () => {
