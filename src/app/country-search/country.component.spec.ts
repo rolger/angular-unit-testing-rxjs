@@ -27,70 +27,98 @@ describe('Country Component Test', () => {
     describe('emitting countries observerable', () => {
         it('emits after 500ms without key and calls service', () => {
             const scheduler = new TestScheduler((actual, expected) => {
-                // asserting the two objects are equal
                 expect(actual).toEqual(expected);
             });
 
-
             scheduler.run(helpers => {
-                const {expectObservable} = helpers;
+                const {expectObservable, cold, flush} = helpers;
+
                 stubCountrySearchService.searchCountriesByName.and.returnValue(
-                    scheduler.createColdObservable('c', {c: COUNTRIES})
+                    cold('c', {c: COUNTRIES})
                 );
 
                 component.ngOnInit();
 
-                expectObservable(component.countries$).toBe('500ms c', {
-                    c: COUNTRIES
-                });
+                expectObservable(component.countries$).toBe('500ms c', {c: COUNTRIES});
+
+                flush();
+                expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('');
             });
-            expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('');
         });
 
         it('receives key and emits after 500ms', () => {
             const scheduler = new TestScheduler((actual, expected) => {
-                // asserting the two objects are equal
                 expect(actual).toEqual(expected);
             });
 
             scheduler.run(helpers => {
-                const {expectObservable} = helpers;
+                const {expectObservable, cold, flush} = helpers;
+
                 stubCountrySearchService.searchCountriesByName.and.returnValue(
-                    scheduler.createColdObservable('c', {c: COUNTRIES})
+                    cold('c', {c: COUNTRIES})
                 );
-                component.keyActions$ = scheduler.createColdObservable('a');
+                component.keyActions$ = cold('a');
 
                 component.ngOnInit();
 
-                expectObservable(component.countries$).toBe('500ms c', {
-                    c: COUNTRIES
-                });
+                expectObservable(component.countries$).toBe('500ms c', {c: COUNTRIES});
+
+                // start virtual time ...
+                flush();
+                expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('a');
             });
-            expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('a');
         });
 
         it(' after 500ms and keys', () => {
             const scheduler = new TestScheduler((actual, expected) => {
-                // asserting the two objects are equal
                 expect(actual).toEqual(expected);
             });
 
             scheduler.run(helpers => {
-                const {expectObservable} = helpers;
-                stubCountrySearchService.searchCountriesByName.and.returnValue(
-                    scheduler.createColdObservable('c', {c: COUNTRIES})
-                );
+                const {expectObservable, cold, flush} = helpers;
 
-                component.keyActions$ = scheduler.createColdObservable('200ms a 600ms t');
-                scheduler.flush();
+                stubCountrySearchService.searchCountriesByName.and.returnValue(
+                    cold('c', {c: COUNTRIES})
+                );
+                component.keyActions$ = cold('x 99ms y 99ms z', {
+                    x: 'a',
+                    y: 'au',
+                    z: 'aus'
+                });
 
                 component.ngOnInit();
 
-                expectObservable(component.countries$).toBe('700ms c 1301ms c', {
+                expectObservable(component.countries$).toBe('700ms c', {
                     c: COUNTRIES
                 });
+
+                scheduler.flush();
+                expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('aus');
             });
-            expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('a');
+        });
+
+        it(' after 600ms and keys', () => {
+            const scheduler = new TestScheduler((actual, expected) => {
+                expect(actual).toEqual(expected);
+            });
+
+            scheduler.run(helpers => {
+                const {expectObservable, cold, flush} = helpers;
+
+                stubCountrySearchService.searchCountriesByName.and.returnValue(
+                    cold('c', {c: COUNTRIES})
+                );
+                component.keyActions$ = cold('600ms a');
+
+                component.ngOnInit();
+
+                expectObservable(component.countries$).toBe('500ms c 599ms c', {
+                    c: COUNTRIES
+                });
+
+                scheduler.flush();
+                expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('a');
+            });
         });
 
     });
