@@ -56,9 +56,15 @@ export class CountrySearchService {
         return this.http.get<RestCountry[]>(this.apiURL)
             .pipe(
                 tap(c => console.log("loading " + c.length + " elements via http.")),
+                tap(_ =>  {
+                    let now: Date = new Date();
+                    if (now.getSeconds() % 11 === 0) {
+                        throw new Error("Service unavailable!");
+                    }
+                }),
                 map(countryArray => {
                     return countryArray
-                        .filter(item => item.name.search(searchString) >= 0)
+                        .filter(item => item.name.toLowerCase().search(searchString) >= 0)
                         .map(item => {
                             return {
                                 name: item.name,

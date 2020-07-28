@@ -21,7 +21,6 @@ describe('Country Component Test', () => {
         ];
         stubCountrySearchService = jasmine.createSpyObj(['searchCountriesByName']);
         component = new CountryComponent(stubCountrySearchService);
-
     });
 
     describe('emitting countries observerable', () => {
@@ -118,6 +117,71 @@ describe('Country Component Test', () => {
 
                 scheduler.flush();
                 expect(stubCountrySearchService.searchCountriesByName).toHaveBeenCalledWith('a');
+            });
+        });
+
+
+        it('after an error occurs contries are EMPTY', () => {
+            const scheduler = new TestScheduler((actual, expected) => {
+                expect(actual).toEqual(expected);
+            });
+
+            scheduler.run(helpers => {
+                const {expectObservable, cold} = helpers;
+
+                stubCountrySearchService.searchCountriesByName.and.returnValue(cold('#'));
+
+                component.ngOnInit();
+
+                expectObservable(component.countries$).toBe('-');
+            });
+        });
+
+        it('after an error occurs errorMessage is set', () => {
+            const scheduler = new TestScheduler((actual, expected) => {
+                expect(actual).toEqual(expected);
+            });
+
+            scheduler.run(helpers => {
+                const {expectObservable, cold} = helpers;
+
+                stubCountrySearchService.searchCountriesByName.and.returnValue(
+                    cold('#', {}, new Error('server error'))
+                );
+
+                component.ngOnInit();
+
+                expectObservable(component.countries$).toBe('-');
+                expectObservable(component.errorMessage$).toBe('500ms a', {a: 'server error'});
+            });
+        });
+
+        it('after error another http returns the result again', () => {
+            const scheduler = new TestScheduler((actual, expected) => {
+                expect(actual).toEqual(expected);
+            });
+
+            scheduler.run(helpers => {
+                const {expectObservable, cold} = helpers;
+
+                stubCountrySearchService.searchCountriesByName.and.returnValue(
+                    cold('#', {}, new Error('server error'))
+                );
+
+                component.ngOnInit();
+
+                expectObservable(component.countries$).toBe('-');
+                expectObservable(component.errorMessage$).toBe('500ms a', {a: 'server error'});
+
+                scheduler.flush();
+
+                stubCountrySearchService.searchCountriesByName.and.returnValue(
+                    cold('c', {c: COUNTRIES})
+                );
+                expectObservable(component.countries$).toBe('1000ms c', {
+                    c: COUNTRIES
+                });
+                expectObservable(component.errorMessage$).toBe('-');
             });
         });
 

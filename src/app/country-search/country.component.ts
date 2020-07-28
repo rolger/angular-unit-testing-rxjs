@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
 import {Country} from '../model/country';
 import {CountrySearchService} from '../services/country-search-service';
-import {BehaviorSubject, Observable, of} from "rxjs";
+import {BehaviorSubject, EMPTY, Observable, of, Subject} from "rxjs";
 import {catchError, debounceTime, startWith, switchMap, tap} from "rxjs/operators";
 
 @Component({
@@ -13,8 +13,11 @@ import {catchError, debounceTime, startWith, switchMap, tap} from "rxjs/operator
 })
 export class CountryComponent implements OnInit {
     private keySubject = new BehaviorSubject<string>('');
-
     keyActions$ = this.keySubject.asObservable();
+
+    private errorMessageSubject = new Subject<string>();
+    errorMessage$ = this.errorMessageSubject.asObservable();
+
     countries$: Observable<Country[]>;
 
     constructor(private searchService: CountrySearchService) {
@@ -25,11 +28,13 @@ export class CountryComponent implements OnInit {
             startWith(''),
             tap(c => console.log(this.printTimestamp() + " received " + c)),
             debounceTime(500),
-            switchMap(searchString => this.searchService.searchCountriesByName(searchString)),
-            catchError(err => {
-                console.log(err.message);
-                return of([]);
-            }),
+            switchMap(searchString => this.searchService.searchCountriesByName(searchString).pipe(
+                catchError(err => {
+                    console.error(err.message);
+                    this.errorMessageSubject.next(err.message);
+                    return EMPTY;
+                })
+            )),
             tap(c => console.log(this.printTimestamp() + " emitted response"))
         );
     }
@@ -41,6 +46,7 @@ export class CountryComponent implements OnInit {
 
     onKey(value: string) {
         this.keySubject.next(value);
+        this.errorMessageSubject.next('');
     }
 
 }

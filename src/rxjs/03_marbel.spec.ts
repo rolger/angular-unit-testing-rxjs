@@ -101,7 +101,7 @@ describe('Marble testing exercises', () => {
         });
 
         // TODO : change the expected test result
-        const expected$ = cold('');
+        const expected$ = cold('' );
         expect(source$).toBeObservable(expected$);
     });
 

@@ -14,7 +14,6 @@
                            type="search"
                     >
                 </div>
-
             </div>
 
             <br/>
@@ -40,6 +39,10 @@
                 </table>
             </div>
 
+            <div class="alert alert-danger"
+                 *ngIf="errorMessage$ | async as errorMessage">
+                {{ errorMessage }}
+            </div>
 
         </div>
     </div>
