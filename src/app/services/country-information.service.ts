@@ -41,7 +41,7 @@ export class CountryInformationService {
         return dist;
     }
 
-    private toRadians(value): number {
+    private toRadians(value: number): number {
         return value * Math.PI / 180;
     }
 }
