@@ -2,8 +2,8 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
 import {Country} from '../model/country';
 import {CountrySearchService} from '../services/country-search-service';
-import {BehaviorSubject, EMPTY, Observable, of, Subject} from "rxjs";
-import {catchError, debounceTime, startWith, switchMap, tap} from "rxjs/operators";
+import {BehaviorSubject, EMPTY, Observable, Subject} from "rxjs";
+import {catchError, debounceTime, startWith, switchMap} from "rxjs/operators";
 
 @Component({
     selector: 'app-country',
@@ -26,22 +26,14 @@ export class CountryComponent implements OnInit {
     ngOnInit(): void {
         this.countries$ = this.keyActions$.pipe(
             startWith(''),
-            tap(c => console.log(this.printTimestamp() + " received " + c)),
             debounceTime(500),
             switchMap(searchString => this.searchService.searchCountriesByName(searchString).pipe(
                 catchError(err => {
-                    console.error(err.message);
                     this.errorMessageSubject.next(err.message);
                     return EMPTY;
                 })
-            )),
-            tap(c => console.log(this.printTimestamp() + " emitted response"))
+            ))
         );
-    }
-
-    private printTimestamp() {
-        let now = new Date();
-        return now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "." + now.getMilliseconds();
     }
 
     onKey(value: string) {
