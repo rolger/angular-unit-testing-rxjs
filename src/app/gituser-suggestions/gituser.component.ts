@@ -1,8 +1,5 @@
 import {Component} from '@angular/core';
-
-import {Country} from '../model/country';
-import {CountrySearchService} from '../services/country-search-service';
-import {EMPTY, Observable, of} from "rxjs";
+import {Observable, of} from "rxjs";
 import {Gituser} from "../model/gituser";
 import {GituserService} from "../services/gituser-service";
 import {tap} from "rxjs/operators";
