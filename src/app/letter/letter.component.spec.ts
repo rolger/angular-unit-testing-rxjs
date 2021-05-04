@@ -7,7 +7,7 @@ import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {of} from 'rxjs/internal/observable/of';
 
 describe('LetterComponent', () => {
-    let COUNTRIES;
+    let COUNTRIES: Country[];
 
     let stubCountrySearchService: jasmine.SpyObj<CountrySearchService>;
     let mockShippingCostService: ShippingCostService;
