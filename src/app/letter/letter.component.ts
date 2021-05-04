@@ -38,7 +38,6 @@ export class LetterComponent implements OnInit {
             });
     }
 
-
     send() {
         if (this.inputIsInvalid()) {
             return;
