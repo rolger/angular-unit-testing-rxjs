@@ -2,9 +2,9 @@ import {CountryComponent} from './country.component';
 import {Country} from '../model/country';
 import {cold, getTestScheduler} from "jasmine-marbles";
 
-describe('CountryComponent', () => {
-    let COUNTRIES;
-    let stubCountrySearchService;
+describe('Country Component Test', () => {
+    let COUNTRIES: Country[];
+    let stubCountrySearchService: any;
     let component: CountryComponent;
 
     beforeEach(() => {
