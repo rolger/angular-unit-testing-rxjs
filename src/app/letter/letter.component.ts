@@ -14,14 +14,14 @@ export class LetterComponent implements OnInit {
     countries: Country [];
 
     content: string;
-    selectedDestination: Country;
+    selectedDestination: Country | undefined;
     isExpressMode: boolean;
 
     message: any;
 
     constructor(private searchService: CountrySearchService, private deliveryService: ShippingCostService) {
         this.countries = [];
-        this.selectedDestination = null;
+        this.selectedDestination = undefined;
         this.content = '';
         this.isExpressMode = false;
     }
@@ -62,14 +62,14 @@ export class LetterComponent implements OnInit {
     }
 
     private sendLetter() {
-        this.deliveryService.calculateCostsAndSend(this.content, this.selectedDestination,
+        this.deliveryService.calculateCostsAndSend(this.content, this.selectedDestination as Country,
             this.isExpressMode ? 'EXPRESS' : 'Normal');
     }
 
     private clearInput() {
         this.content = '';
         this.isExpressMode = false;
-        this.selectedDestination = null;
+        this.selectedDestination = undefined;
     }
 
     private displaySuccess() {
