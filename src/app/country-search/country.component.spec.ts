@@ -3,8 +3,8 @@ import {Country} from '../model/country';
 import {TestScheduler} from "rxjs/testing";
 
 describe('Country Component Test', () => {
-    let COUNTRIES;
-    let stubCountrySearchService;
+    let COUNTRIES: Country[];
+    let stubCountrySearchService: any;
     let component: CountryComponent;
 
     beforeEach(() => {
