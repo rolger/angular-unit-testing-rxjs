@@ -182,7 +182,7 @@ describe('RxJs operator exercises', () => {
         // TODO : add code here
         let $result;
 
-        let $expected = cold('(abc|)', {
+        let $expected = cold('(ab|)', {
             a: 'coat',
             b: 'pants'
         });
