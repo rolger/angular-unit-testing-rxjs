@@ -1,12 +1,10 @@
-import {EMPTY, from, fromEvent, interval, Observable, of, Subject} from "rxjs";
-import {EventEmitter} from "@angular/core";
-import {take} from "rxjs/operators";
+import {from, Observable} from "rxjs";
 
 function subscribeToObserver(observable: Observable<unknown>) {
     let result = '';
     observable.subscribe({
         next(data) {
-            if(data === 4711)
+            if (data === 4711)
                 throw new Error('4711');
 
             result += 'value: ' + data + ';';
@@ -60,7 +58,7 @@ describe('RxJs and observable exercises', () => {
 
         let result = subscribeToObserver(observable);
 
-        expect(result).toEqual('value: 201;error code: 4711');
+        expect(result).toEqual('value: 201;error code: Error: 4711');
     });
 
     it('should be created with rxjs factory methods', () => {
@@ -98,11 +96,11 @@ describe('RxJs and observable exercises', () => {
             subscriber.next(4);
         });
 
-        let received;
+        let received: unknown;
         observable.subscribe(value => received = value);
 
         // TODO: change to fix the test
-        // expect(received).toEqual('4 ?');
+        expect(received).toEqual(0);
     });
 
     it('should add and count', () => {

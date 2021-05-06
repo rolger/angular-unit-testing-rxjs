@@ -32,12 +32,13 @@ describe('Marble testing exercises', () => {
                 take(3)
             );
 
+        // TODO : change the expected observable
         const $expected = cold('');
         expect($result).toBeObservable($expected);
     });
 
 
-    it('should compute squares more than 10', () => {
+    it('should compute squares more than 10 and less than 50', () => {
         const $result = of(5, 12)
             .pipe(
                 map(value => value * value),
@@ -45,6 +46,7 @@ describe('Marble testing exercises', () => {
                 take(3)
             );
 
+        // TODO : change the expected observable
         const $expected = cold('');
         expect($result).toBeObservable($expected);
     });
@@ -54,7 +56,8 @@ describe('Marble testing exercises', () => {
         const provided = hot('-a-^b---c-|');
 
         // TODO : change the expected test result
-        expect(provided).toBeObservable(cold(''));
+        const expected = cold('');
+        expect(provided).toBeObservable(expected);
         // TODO : add the subscription statement
         const subscription = '';
         expect(provided).toHaveSubscriptions(subscription);
@@ -67,22 +70,24 @@ describe('Marble testing exercises', () => {
         );
 
         // TODO : change the expected test result
-        expect(provided).toBeObservable(EMPTY);
+        const expected = cold('');
+        expect(provided).toBeObservable(expected);
         // TODO : add the subscription statement
         const subscription = '';
         expect(alphabets).toHaveSubscriptions(subscription);
     });
 
     it('should concat an observable of observables', () => {
-            const x = cold('    ----a------b------|                 ');
-            const y = cold('                      ---c-d---|        ');
-            const z = cold('                               ---e--f-|');
-            const outer = hot('-x---y----z------|', { x: x, y: y, z: z });
+        const x = cold('    ----a------b------|                 ');
+        const y = cold('                      ---c-d---|        ');
+        const z = cold('                               ---e--f-|');
+        const outer = hot('-x---y----z------|', {x: x, y: y, z: z});
 
-            const result = outer.pipe(concatAll());
+        const result = outer.pipe(concatAll());
 
-            const expected = cold('');
-            expect(result).toBeObservable(expected);
+        // TODO : change the expected test result
+        const expected = cold('');
+        expect(result).toBeObservable(expected);
     });
 
     it('should throw an error', () => {

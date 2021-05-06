@@ -1,5 +1,5 @@
 import {from, of} from "rxjs";
-import {filter, flatMap, map, mergeMap, reduce, take} from "rxjs/operators";
+import {filter, map, take} from "rxjs/operators";
 import {cold} from "jasmine-marbles";
 
 interface Item {
@@ -142,19 +142,19 @@ describe('RxJs operator exercises', () => {
             // TODO : add code here
         );
 
-        const $expected = cold('(a|)', {a: {name: "Diana", age: 38, budget: 12000}});
+        const $expected = cold('(a|)', {a: {name: "Diana", age: 38, budget: 12000, wishList: ["chair", "table"]}});
         expect($result).toBeObservable($expected);
     });
 
     it('looking for items customers want to buy', () => {
-        const $shops = from(CUSTOMERS);
+        const $customers = from(CUSTOMERS);
 
-        const $wishes = $shops.pipe(
+        const $wishes = $customers.pipe(
             // TODO : add code here
         );
 
         let $expected = cold('(a|)', {
-            a: 'chair, table, cable, speaker, headphone, ice cream, screwdriver, cable, earphone, small table, plate, fork, coat, pants, spinach, onion, eggs, potatoes'
+            a: 'chair, table, cable, speaker, headphone, ice cream, screwdriver, earphone, small table, plate, fork, coat, pants, spinach, onion, eggs, potatoes'
         });
         expect($wishes).toBeObservable($expected);
     });
@@ -193,9 +193,8 @@ describe('RxJs operator exercises', () => {
         const observable1 = cold('---a---b---|', {a: 1, b: 3});
         const observable2 = cold('-----c---d---|', {c: 5, d: 7});
 
-        const $result = observable1.pipe(
-            // TODO : add code here
-        );
+        // TODO : add code here
+        let $result;
 
         const $expected = cold('-----x---y-|', {x: 6, y: 10});
         expect($result).toBeObservable($expected);
