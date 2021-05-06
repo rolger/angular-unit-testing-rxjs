@@ -1,4 +1,4 @@
-import {from, of, zip} from "rxjs";
+import {EMPTY, from, of, zip} from "rxjs";
 import {distinct, filter, map, max, mergeMap, reduce, take, tap} from "rxjs/operators";
 import {cold} from "jasmine-marbles";
 
@@ -154,7 +154,7 @@ describe('RxJs operator exercises', () => {
         const $wishes = $customers.pipe(
             mergeMap(c => c.wishList),
             distinct(),
-            reduce((acc, cur) => acc = acc + ", " + cur)
+            reduce((acc, cur) => acc + ", " + cur)
         );
 
         let $expected = cold('(a|)', {
@@ -207,13 +207,13 @@ describe('RxJs operator exercises', () => {
             })
         );
 
-        let $result;
+        let $result = EMPTY;
 
         let $expected = cold('(ab|)', {
             a: 'coat',
             b: 'pants'
         });
-        expect($wishlist).toBeObservable($expected);
+        expect($result).toBeObservable($expected);
     });
 
     it('can zip 2 streams', () => {
