@@ -1,4 +1,4 @@
-import {EMPTY, from, Observable, of, throwError} from "rxjs";
+import {from, Observable, of, throwError} from "rxjs";
 import {concatAll, filter, map, switchMap, take} from "rxjs/operators";
 import {cold, hot} from "jasmine-marbles";
 import {checkNumbers} from "./03_marbel";
@@ -9,8 +9,7 @@ describe('Marble testing exercises', () => {
     it('should contain a value', () => {
         const result = from(['orange']);
 
-        // TODO: implement the expected observable
-        const expected = cold('');
+        const expected = cold('(x|)', {x: 'orange'});
 
         expect(result).toBeObservable(expected);
     });
@@ -18,8 +17,7 @@ describe('Marble testing exercises', () => {
     it('should contain multiple values at the same timeframe', () => {
         const result = of(1, 2, 3);
 
-        // TODO: implement the expected observable
-        const expected = cold('');
+        const expected = cold('(xyz|)', {x: 1, y:2, z:3});
 
         expect(result).toBeObservable(expected);
     });
@@ -32,12 +30,12 @@ describe('Marble testing exercises', () => {
                 take(3)
             );
 
-        const $expected = cold('');
+        const $expected = cold('(xyz|)', {x: 16, y:25, z:36});
         expect($result).toBeObservable($expected);
     });
 
 
-    it('should compute squares more than 10', () => {
+    it('should compute squares more than 10 and less than 50', () => {
         const $result = of(5, 12)
             .pipe(
                 map(value => value * value),
@@ -45,7 +43,7 @@ describe('Marble testing exercises', () => {
                 take(3)
             );
 
-        const $expected = cold('');
+        const $expected = cold('(x|)', {x: 25});
         expect($result).toBeObservable($expected);
     });
 
@@ -53,10 +51,11 @@ describe('Marble testing exercises', () => {
     it('should test subscription on hot observable', () => {
         const provided = hot('-a-^b---c-|');
 
-        // TODO : change the expected test result
-        expect(provided).toBeObservable(cold(''));
-        // TODO : add the subscription statement
-        const subscription = '';
+        expect(provided).toBeObservable(cold('-b---c-|'));
+
+        // [SubscriptionLog{subscribedFrame: 0, unsubscribedFrame: 70}]
+        console.log(provided.getSubscriptions());
+        const subscription = '^------!';
         expect(provided).toHaveSubscriptions(subscription);
     });
 
@@ -66,10 +65,12 @@ describe('Marble testing exercises', () => {
             switchMap((s: string) => s.toUpperCase())
         );
 
-        // TODO : change the expected test result
-        expect(provided).toBeObservable(EMPTY);
+        let expected$ = cold('--A--B--C--D');
+        expect(provided).toBeObservable(expected$);
+
+        console.log(alphabets.getSubscriptions());
         // TODO : add the subscription statement
-        const subscription = '';
+        const subscription = '^';
         expect(alphabets).toHaveSubscriptions(subscription);
     });
 
@@ -81,7 +82,7 @@ describe('Marble testing exercises', () => {
 
             const result = outer.pipe(concatAll());
 
-            const expected = cold('');
+            const expected = cold('-----a------b---------c-d------e--f-|');
             expect(result).toBeObservable(expected);
     });
 
@@ -89,7 +90,7 @@ describe('Marble testing exercises', () => {
         const source$ = throwError('error');
 
         // TODO : change the expected test result
-        const expected$ = cold('');
+        const expected$ = cold('#');
         expect(source$).toBeObservable(expected$);
     });
 
@@ -101,13 +102,16 @@ describe('Marble testing exercises', () => {
         });
 
         // TODO : change the expected test result
-        const expected$ = cold('');
+        const expected$ = cold('(xy#)', {x:'orange', y:'apple'},  new Error('server fruit error'));
         expect(source$).toBeObservable(expected$);
     });
 
     // TODO: implement more than one testcase
     it('should implement enough testcase for search', () => {
-        expect(checkNumbers('')).toBeObservable(cold(''));
+        expect(checkNumbers('')).toBeObservable(cold('|'));
+        expect(checkNumbers('11')).toBeObservable(cold('|'));
+        expect(checkNumbers('1')).toBeObservable(cold('(1|)'));
+        expect(checkNumbers('9')).toBeObservable(cold('(9|)'));
     });
 
 });

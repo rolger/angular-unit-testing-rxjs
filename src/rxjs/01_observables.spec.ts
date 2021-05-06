@@ -1,12 +1,10 @@
-import {EMPTY, from, fromEvent, interval, Observable, of, Subject} from "rxjs";
-import {EventEmitter} from "@angular/core";
-import {take} from "rxjs/operators";
+import {from, Observable, of} from "rxjs";
 
 function subscribeToObserver(observable: Observable<unknown>) {
     let result = '';
     observable.subscribe({
         next(data) {
-            if(data === 4711)
+            if (data === 4711)
                 throw new Error('4711');
 
             result += 'value: ' + data + ';';
@@ -25,7 +23,7 @@ describe('RxJs and observable exercises', () => {
 
     it('should create an empty Observable', () => {
         const observable = new Observable(observer => {
-            // TODO: add the missing calls
+            observer.complete()
         });
 
         let result = subscribeToObserver(observable);
@@ -35,7 +33,9 @@ describe('RxJs and observable exercises', () => {
 
     it('should create an Observable with values', () => {
         const observable = new Observable(observer => {
-            // TODO: add the missing calls
+            observer.next(1);
+            observer.next(2);
+            observer.complete();
         });
 
         let result = subscribeToObserver(observable);
@@ -45,7 +45,8 @@ describe('RxJs and observable exercises', () => {
 
     it('should create an Observable with error code', () => {
         const observable = new Observable(observer => {
-            // TODO: add the missing calls
+            observer.next(201);
+            observer.error(4711);
         });
 
         let result = subscribeToObserver(observable);
@@ -55,17 +56,17 @@ describe('RxJs and observable exercises', () => {
 
     it('should create an Observable with throwing error code', () => {
         const observable = new Observable(observer => {
-            // TODO: add the missing calls
+            observer.next(201);
+            observer.error(new Error('4711'));
         });
 
         let result = subscribeToObserver(observable);
 
-        expect(result).toEqual('value: 201;error code: 4711');
+        expect(result).toEqual('value: 201;error code: Error: 4711');
     });
 
     it('should be created with rxjs factory methods', () => {
-        // TODO: change to fix the test
-        const observable = from("do it right");
+        const observable = of(1, 2);
 
         let result = subscribeToObserver(observable);
 
@@ -74,7 +75,7 @@ describe('RxJs and observable exercises', () => {
 
     it('should emit an array with rxjs factory methods', () => {
         // TODO: change to fix the test
-        const observable = from("do it right");
+        const observable = of([1, 2]);
 
         let result = subscribeToObserver(observable);
 
@@ -86,7 +87,7 @@ describe('RxJs and observable exercises', () => {
         from(['foo', 'bar']).subscribe(x => received = x);
 
         // TODO: change to fix the test
-        expect(received).toEqual('?');
+        expect(received).toEqual('bar');
     });
 
     it('should not receive last value', () => {
@@ -112,8 +113,9 @@ describe('RxJs and observable exercises', () => {
         };
 
         // TODO: change to fix the test
-        from([]).subscribe(num => {
+        from([10, 8, 2, 1]).subscribe(num => {
             result.sum += num;
+            result.count++;
         });
 
         expect(result.sum).toEqual(21);

@@ -1,5 +1,5 @@
-import {from, of} from "rxjs";
-import {filter, flatMap, map, mergeMap, reduce, take} from "rxjs/operators";
+import {from, of, zip} from "rxjs";
+import {distinct, filter, map, max, mergeMap, reduce, take, tap} from "rxjs/operators";
 import {cold} from "jasmine-marbles";
 
 interface Item {
@@ -106,7 +106,8 @@ describe('RxJs operator exercises', () => {
         const $someNumbers = of(9, 2, 3, 4, 5);
 
         const $result = $someNumbers.pipe(
-            // TODO : add code here
+            map(val => val - 2),
+            take(3)
         );
 
         const $expected = cold('(abc|)', {a: 7, b: 0, c: 1});
@@ -117,7 +118,7 @@ describe('RxJs operator exercises', () => {
         const $customers = from(CUSTOMERS);
 
         const $result = $customers.pipe(
-            // TODO : add code here
+            map(c => c.age)
         );
 
         const $expected = cold('(abcdef|)', {a: 38, b: 21, c: 27, d: 22, e: 35, f: 34});
@@ -128,7 +129,8 @@ describe('RxJs operator exercises', () => {
         const $customers = from(CUSTOMERS);
 
         const $result = $customers.pipe(
-            // TODO : add code here
+            filter(c => c.budget > 10000),
+            map(c => c.name)
         );
 
         const $expected = cold('(abc|)', {a: 'Diana', b: 'Andrew', c: 'Amy'});
@@ -139,22 +141,24 @@ describe('RxJs operator exercises', () => {
         const $customers = from(CUSTOMERS);
 
         const $result = $customers.pipe(
-            // TODO : add code here
+            max((c1, c2) => c1.budget > c2.budget ? 1 : -1)
         );
 
-        const $expected = cold('(a|)', {a: {name: "Diana", age: 38, budget: 12000}});
+        const $expected = cold('(a|)', {a: {name: "Diana", age: 38, budget: 12000, wishList: ["chair", "table"]}});
         expect($result).toBeObservable($expected);
     });
 
     it('looking for items customers want to buy', () => {
-        const $shops = from(CUSTOMERS);
+        const $customers = from(CUSTOMERS);
 
-        const $wishes = $shops.pipe(
-            // TODO : add code here
+        const $wishes = $customers.pipe(
+            mergeMap(c => c.wishList),
+            distinct(),
+            reduce((acc, cur) => acc = acc + ", " + cur)
         );
 
         let $expected = cold('(a|)', {
-            a: 'chair, table, cable, speaker, headphone, ice cream, screwdriver, cable, earphone, small table, plate, fork, coat, pants, spinach, onion, eggs, potatoes'
+            a: 'chair, table, cable, speaker, headphone, ice cream, screwdriver, earphone, small table, plate, fork, coat, pants, spinach, onion, eggs, potatoes'
         });
         expect($wishes).toBeObservable($expected);
     });
@@ -163,7 +167,9 @@ describe('RxJs operator exercises', () => {
         const $shops = from(SHOPS);
 
         const $drinks = $shops.pipe(
-            // TODO : add code here
+            mergeMap(s => s.items),
+            filter(i => i.category === "beverage"),
+            map(i => i.name + ": €" + i.price)
         );
 
         let $expected = cold('(abc|)', {
@@ -178,23 +184,44 @@ describe('RxJs operator exercises', () => {
         const $shops = from(SHOPS);
         const $customers = from(CUSTOMERS);
 
+        let $sold = $shops.pipe(
+            mergeMap(s => s.items),
+            map(i => i.name),
+            distinct(),
+            //tap(n => console.log(n))
+        );
+
+        let $wishlist = $customers.pipe(
+            mergeMap(s => s.wishList),
+            distinct(),
+            tap(n => console.log(n))
+        );
+
         // Create a set of item names that are in the wishList but not on  sale in any shop.
-        // TODO : add code here
+        $wishlist.pipe(
+            mergeMap(item => {
+                return $sold.pipe(
+                    filter(v => item != v),
+                    tap(n => console.log(n))
+                )
+            })
+        );
+
         let $result;
 
         let $expected = cold('(abc|)', {
             a: 'coat',
             b: 'pants'
         });
-        expect($result).toBeObservable($expected);
+        expect($wishlist).toBeObservable($expected);
     });
 
     it('can zip 2 streams', () => {
         const observable1 = cold('---a---b---|', {a: 1, b: 3});
         const observable2 = cold('-----c---d---|', {c: 5, d: 7});
 
-        const $result = observable1.pipe(
-            // TODO : add code here
+        const $result = zip(observable1, observable2).pipe(
+            map(v => v.reduce((a, b) => a + b))
         );
 
         const $expected = cold('-----x---y-|', {x: 6, y: 10});
@@ -209,8 +236,7 @@ describe('RxJs operator exercises', () => {
                 take(3)
             );
 
-        // TODO : change the marble test result
-        const $expected = cold('');
+        let $expected = cold('(abc|)', {a: 144, b: 49, c: 16});
         expect($result).toBeObservable($expected);
     });
 
