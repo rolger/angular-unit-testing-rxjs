@@ -1,5 +1,5 @@
 import {interval} from "rxjs";
-import {cold} from "jasmine-marbles";
+import {cold, getTestScheduler} from "jasmine-marbles";
 import {delay, filter, take} from "rxjs/operators";
 import {of} from "rxjs/internal/observable/of";
 
