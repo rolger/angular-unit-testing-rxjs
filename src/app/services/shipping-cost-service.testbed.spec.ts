@@ -21,15 +21,17 @@ describe('ShippingCostService', () => {
                 {provide: CountryInformationService, useValue: stubCountryService},
                 {provide: LetterSendService, useValue: mockSendService}
             ],
+        }).compileComponents().then(() => {
+            service = TestBed.inject(ShippingCostService);
         });
-        service = TestBed.get(ShippingCostService);
     });
 
     describe('calculateCostsAndSend()', () => {
         it('should calculate costs for common market', () => {
             stubCountryService.isInCommonMarket.and.returnValue(true);
 
-            service.calculateCostsAndSend('', 'mockCountry' as unknown as Country, '');
+            const mockCountry = 'mockCountry' as unknown as Country;
+            service.calculateCostsAndSend('', mockCountry, '');
 
             expect(mockSendService.sendTo).toHaveBeenCalledWith(anything(), anything(), new Money(5));
         });
@@ -38,17 +40,19 @@ describe('ShippingCostService', () => {
             stubCountryService.isInCommonMarket.and.returnValue(false);
             stubCountryService.isInAmericas.and.returnValue(true);
 
-            service.calculateCostsAndSend('', 'mockCountry' as unknown as Country, '');
+            const mockCountry = 'mockCountry' as unknown as Country;
+            service.calculateCostsAndSend('', mockCountry, '');
 
-            expect(mockSendService.sendTo).toHaveBeenCalledWith('mockCountry', '', new Money(15));
+            expect(mockSendService.sendTo).toHaveBeenCalledWith(mockCountry, '', new Money(15));
         });
 
         it('should pass the country to the send service correctly', () => {
             stubCountryService.isInCommonMarket.and.returnValue(true);
 
-            service.calculateCostsAndSend('', 'mockCountry' as unknown as Country, '');
+            const mockCountry = 'mockCountry' as unknown as Country;
+            service.calculateCostsAndSend('', mockCountry, '');
 
-            expect(mockSendService.sendTo).toHaveBeenCalledWith('mockCountry', anything(), anything());
+            expect(mockSendService.sendTo).toHaveBeenCalledWith(mockCountry, anything(), anything());
         });
     });
 
