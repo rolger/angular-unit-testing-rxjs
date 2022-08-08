@@ -1,4 +1,4 @@
-# Angular-RxJs-marble-testing
+# Angular Unit Testing with RxJS Example App
 
 Sample application for testing RxJs streams in Angular with marble-testing.
 
