@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {StartComponent} from "./home/start.component";
-import {PageNotFoundComponent} from "./page-not-found.component";
-import {CountryComponent} from "./country-search/country.component";
-import {LetterComponent} from "./letter/letter.component";
-import {GituserComponent} from "./gituser-suggestions/gituser.component";
+import {StartComponent} from './home/start.component';
+import {PageNotFoundComponent} from './page-not-found.component';
+import {CountryComponent} from './country-search/country.component';
+import {LetterComponent} from './letter/letter.component';
+import {GituserComponent} from './gituser-suggestions/gituser.component';
 
 @NgModule({
     imports: [
