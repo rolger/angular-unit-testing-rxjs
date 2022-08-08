@@ -1,6 +1,6 @@
 import {CountryComponent} from './country.component';
 import {Country} from '../model/country';
-import {cold, getTestScheduler} from "jasmine-marbles";
+import {cold, getTestScheduler} from 'jasmine-marbles';
 
 describe('Country Component Test', () => {
     let COUNTRIES: Country[];

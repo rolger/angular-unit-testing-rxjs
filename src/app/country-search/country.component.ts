@@ -2,7 +2,7 @@ import {Component, OnDestroy} from '@angular/core';
 
 import {Country} from '../model/country';
 import {CountrySearchService} from '../services/country-search-service';
-import {Subscription} from "rxjs";
+import {Subscription} from 'rxjs/internal/Subscription';
 
 @Component({
     selector: 'app-country',
@@ -38,7 +38,7 @@ export class CountryComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.sub?.unsubscribe()
+        this.sub?.unsubscribe();
     }
 
 }
