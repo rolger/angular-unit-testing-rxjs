@@ -17,7 +17,7 @@
                 <table class="table-sm" *ngIf="users$ | async as users">
                     <tbody *ngFor="let user of users">
                     <tr>
-                        <td><img border="1" height="64" src="{{user.avatar_url}}" width="64"></td>
+                        <td><img height="64" src="{{user.avatar_url}}" width="64"></td>
                         <td>{{ user.login }}</td>
                         <td><button (click)="close(user.id)" class="btn btn-primary" type="button">X</button></td>
                     </tr>
